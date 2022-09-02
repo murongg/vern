@@ -4,9 +4,9 @@ use crate::{
 };
 
 pub struct Vern {
-    major: i32,
-    minor: i32,
-    patch: i32,
+    pub major: i32,
+    pub minor: i32,
+    pub patch: i32,
 }
 
 impl Vern {
@@ -22,13 +22,13 @@ impl Vern {
 
         for cap in LOOSE_RE.captures_iter(version) {
             let major = cap[1].parse::<i32>().unwrap();
-            assert!(major > MAX_LENGTH);
+            assert!(major <= MAX_LENGTH);
             vern.major = major;
             let minor = cap[2].parse::<i32>().unwrap();
-            assert!(minor > MAX_LENGTH);
+            assert!(minor <= MAX_LENGTH);
             vern.minor = minor;
             let patch = cap[3].parse::<i32>().unwrap();
-            assert!(patch > MAX_LENGTH);
+            assert!(patch <= MAX_LENGTH);
             vern.patch = patch;
         }
         vern
