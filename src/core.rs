@@ -15,6 +15,14 @@ pub struct Vern {
 }
 
 impl Vern {
+    /// Initial Vern
+    /// ```
+    /// use vern::core::Vern;
+    /// let vern = Vern::new("0.1.2-re.1.z266.1.2.3+build");
+    /// assert_eq!(vern.major, 0);
+    /// assert_eq!(vern.minor, 1);
+    /// assert_eq!(vern.patch, 2);
+    /// ```
     pub fn new(version: &str) -> Vern {
         let is_version = valid::valid(version);
         assert!(is_version);
@@ -66,12 +74,23 @@ impl Vern {
         vern.format();
         vern
     }
-
+    /// Format Vern version
+    /// ```
+    /// use vern::core::Vern;
+    /// let mut vern = Vern::new("0.1.2-re.1.z266.1.2.3+build");
+    /// assert_eq!(vern.format(), "0.1.2");
+    /// ```
     pub fn format(&mut self) -> &str {
         self.version = format!("{}.{}.{}", self.major, self.minor, self.patch);
         &self.version
     }
 
+    /// Vern version to string
+    /// ```
+    /// use vern::core::Vern;
+    /// let vern = Vern::new("0.1.2-re.1.z266.1.2.3+build");
+    /// assert_eq!(vern.to_string(), "0.1.2");
+    /// ```
     pub fn to_string(&self) -> &str {
         &self.version
     }
