@@ -14,4 +14,5 @@ fn test_basic_function() {
     assert_eq!(vern.build.contains(&"build".to_string()), true);
     assert_eq!(vern.version, "0.1.2");
     assert_eq!(vern.format(), "0.1.2");
+    assert_eq!(vern.to_string(), vern.version);
 }

@@ -71,4 +71,8 @@ impl Vern {
         self.version = format!("{}.{}.{}", self.major, self.minor, self.patch);
         &self.version
     }
+
+    pub fn to_string(&self) -> &str {
+        &self.version
+    }
 }
