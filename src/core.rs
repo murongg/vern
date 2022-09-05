@@ -1,7 +1,7 @@
 use regex::Regex;
 
 use crate::{
-    constants::{self, LOOSE_RE, MAX_LENGTH},
+    constants::{LOOSE_RE, MAX_LENGTH},
     valid,
 };
 
@@ -40,8 +40,8 @@ impl Vern {
                     let prerelease_arr = cap[4].split(".");
                     for release in prerelease_arr {
                         if Regex::new(r"^[0-9]+$").unwrap().is_match(release) {
-                            let num = release.parse::<i32>().unwrap();
-                            if num >= 0 && num < constants::MAX_LENGTH {
+                            let num = release.parse::<isize>().unwrap();
+                            if num >=0 && num < isize::MAX {
                                 vern.prerelease.push(release.to_owned());
                             }
                         } else {
