@@ -11,6 +11,7 @@ pub struct Vern {
     pub patch: i32,
     pub prerelease: Vec<String>,
     pub build: Vec<String>,
+    pub version: String,
 }
 
 impl Vern {
@@ -24,6 +25,7 @@ impl Vern {
             patch: 0,
             prerelease: Vec::new(),
             build: Vec::new(),
+            version: String::new(),
         };
 
         for cap in LOOSE_RE.captures_iter(version) {
@@ -61,6 +63,12 @@ impl Vern {
                 }
             }
         }
+        vern.format();
         vern
+    }
+
+    pub fn format(&mut self) -> &str {
+        self.version = format!("{}.{}.{}", self.major, self.minor, self.patch);
+        &self.version
     }
 }
