@@ -10,6 +10,7 @@ pub struct Vern {
     pub minor: i32,
     pub patch: i32,
     pub prerelease: Vec<String>,
+    pub build: Vec<String>,
 }
 
 impl Vern {
@@ -22,6 +23,7 @@ impl Vern {
             minor: 0,
             patch: 0,
             prerelease: Vec::new(),
+            build: Vec::new(),
         };
 
         for cap in LOOSE_RE.captures_iter(version) {
@@ -35,18 +37,26 @@ impl Vern {
             assert!(patch <= MAX_LENGTH);
             vern.patch = patch;
 
-            if cap.len() > 5 {
+            if cap.len() >= 5 {
                 if !cap.get(4).map_or("", |m| m.as_str()).is_empty() {
                     let prerelease_arr = cap[4].split(".");
                     for release in prerelease_arr {
                         if Regex::new(r"^[0-9]+$").unwrap().is_match(release) {
                             let num = release.parse::<isize>().unwrap();
-                            if num >=0 && num < isize::MAX {
+                            if num >= 0 && num < isize::MAX {
                                 vern.prerelease.push(release.to_owned());
                             }
                         } else {
                             vern.prerelease.push(release.to_owned());
                         }
+                    }
+                }
+            }
+
+            if cap.len() >= 6 {
+                if !cap.get(5).map_or("", |m| m.as_str()).is_empty() {
+                    for build in cap[5].split(".") {
+                        vern.build.push(build.to_owned());
                     }
                 }
             }
