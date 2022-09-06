@@ -2,6 +2,7 @@ use regex::Regex;
 
 use crate::{
     constants::{LOOSE_RE, MAX_LENGTH},
+    internal::identifiers::{compare_identifiers_with_int, CompareType},
     valid,
 };
 
@@ -15,7 +16,7 @@ pub struct Vern {
 }
 
 impl Vern {
-    /// Initial Vern
+    /// Initialize Vern
     /// ```
     /// use vern::core::Vern;
     /// let vern = Vern::new("0.1.2-re.1.z266.1.2.3+build");
@@ -93,5 +94,51 @@ impl Vern {
     /// ```
     pub fn to_string(&self) -> &str {
         &self.version
+    }
+
+    /// compare with other version
+    /// ```
+    /// use vern::{core::Vern, internal::identifiers::CompareType};
+    /// let avern = Vern::new("0.1.2");
+    /// let bvern = Vern::new("0.1.3");
+    /// match avern.compare(bvern) {
+    ///     CompareType::LARGER => assert!(false),
+    ///     CompareType::SMALLER => assert!(true),
+    ///     CompareType::EQUAL => assert!(false),
+    /// }
+    /// ```
+    pub fn compare(&self, other: Vern) -> CompareType {
+        if self.version == other.version {
+            return CompareType::EQUAL;
+        }
+
+        self.compare_main(other)
+    }
+
+    /// compare with other version
+    /// ```
+    /// use vern::{core::Vern, internal::identifiers::CompareType};
+    /// let avern = Vern::new("0.1.2");
+    /// let bvern = Vern::new("0.1.3");
+    /// match avern.compare_main(bvern) {
+    ///     CompareType::LARGER => assert!(false),
+    ///     CompareType::SMALLER => assert!(true),
+    ///     CompareType::EQUAL => assert!(false),
+    /// }
+    /// ```
+    pub fn compare_main(&self, other: Vern) -> CompareType {
+        if compare_identifiers_with_int(self.major, other.major) == 1
+            || compare_identifiers_with_int(self.minor, other.minor) == 1
+            || compare_identifiers_with_int(self.patch, other.patch) == 1
+        {
+            CompareType::LARGER
+        } else if compare_identifiers_with_int(self.major, other.major) == 0
+            && compare_identifiers_with_int(self.minor, other.minor) == 0
+            && compare_identifiers_with_int(self.patch, other.patch) == 0
+        {
+            CompareType::EQUAL
+        } else {
+            CompareType::SMALLER
+        }
     }
 }
